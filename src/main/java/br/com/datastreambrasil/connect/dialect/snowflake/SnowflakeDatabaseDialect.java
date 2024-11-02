@@ -13,13 +13,9 @@ import io.debezium.connector.jdbc.dialect.GeneralDatabaseDialect;
 import io.debezium.connector.jdbc.dialect.SqlStatementBuilder;
 import io.debezium.connector.jdbc.dialect.sqlserver.connect.ConnectTimeType;
 import io.debezium.connector.jdbc.relational.TableDescriptor;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Optional;
-import java.util.Set;
 import org.hibernate.SessionFactory;
 import org.hibernate.dialect.Dialect;
-import org.hibernate.dialect.SQLServerDialect;
 
 /**
  * A {@link DatabaseDialect} implementation for SnowFlake.
@@ -130,7 +126,7 @@ public class SnowflakeDatabaseDialect extends GeneralDatabaseDialect {
         final SqlStatementBuilder builder = new SqlStatementBuilder();
         builder.append("MERGE INTO ");
         builder.append(getQualifiedTableName(table.getId()));
-        builder.append(" WITH (HOLDLOCK) AS TARGET USING (SELECT ");
+        builder.append(" AS TARGET USING (SELECT ");
         builder.appendLists(", ", record.getKeyFieldNames(), record.getNonKeyFieldNames(),
                 (name) -> columnNameFromField(name, columnQueryBindingFromField(name, table, record) + " AS ", record));
         builder.append(") AS INCOMING ON (");
@@ -153,7 +149,7 @@ public class SnowflakeDatabaseDialect extends GeneralDatabaseDialect {
         builder.append(") VALUES (");
         builder.appendLists(",", record.getNonKeyFieldNames(), record.getKeyFieldNames(), (name) -> columnNameFromField(name, "INCOMING.", record));
         builder.append(")");
-        builder.append(";"); // SQL server requires this to be terminated this way.
+        builder.append(";");
 
         return wrapWithIdentityInsert(table, builder.build());
     }
