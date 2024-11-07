@@ -93,7 +93,7 @@ public class SnowflakeDatabaseDialect extends GeneralDatabaseDialect {
 
     @Override
     public String getTimeQueryBinding() {
-        return "cast(? as time(7))";
+        return "?";
     }
 
     @Override
