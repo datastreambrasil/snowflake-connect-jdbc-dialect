@@ -89,6 +89,7 @@ public class SnowflakeDatabaseDialect extends GeneralDatabaseDialect {
         registerType(XmlType.INSTANCE);
         registerType(ZonedTimeType.INSTANCE);
         registerType(ConnectTimeType.INSTANCE);
+        registerType(TimestampType.INSTANCE);
     }
 
     @Override
